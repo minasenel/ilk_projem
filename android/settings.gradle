@@ -1,30 +1,44 @@
+// Configure plugin repositories
 pluginManagement {
+    def flutterSdkPath = {
+        def properties = new Properties()
+        def propertiesFile = new File(rootProject.projectDir, "local.properties")
+        if (propertiesFile.exists()) {
+            propertiesFile.withInputStream { stream ->
+                properties.load(stream)
+            }
+            return properties.getProperty('flutter.sdk')
+        }
+    }()
+
+    plugins {
+        id 'com.android.application' version '8.2.2'
+        id 'com.android.library' version '8.2.2'
+        id 'org.jetbrains.kotlin.android' version '1.9.22'
+        id 'dev.flutter.flutter-gradle-plugin' version '1.0.0' apply false
+    }
+
     repositories {
+        google()
+        mavenCentral()
         gradlePluginPortal()
-        google()
-        mavenCentral()
+        maven {
+            url "${flutterSdkPath}/bin/cache/artifacts/engine/android-arm64-v8a/maven"
+        }
     }
 }
 
+// Configure dependency repositories
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
     repositories {
         google()
         mavenCentral()
     }
 }
 
-include ':app'
+// Set root project name
+rootProject.name = 'android'
 
-def flutterProjectRoot = rootProject.projectDir.parentFile
-def plugins = new Properties()
-def pluginsFile = new File(flutterProjectRoot, '.flutter-plugins')
-if (pluginsFile.exists()) {
-    pluginsFile.withReader('UTF-8') { reader -> plugins.load(reader) }
-}
-
-plugins.each { name, path ->
-    def pluginDirectory = flutterProjectRoot.toPath().resolve(path).toFile()
-    include ":$name"
-    project(":$name").projectDir = pluginDirectory
-} 
+// Include the app project
+include ':app' 

@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pinput/pinput.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 @RoutePage()
-class PhoneVerificationPage extends StatelessWidget {
+class PhoneVerificationPage extends ConsumerWidget {
   const PhoneVerificationPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
       appBar: AppBar(
